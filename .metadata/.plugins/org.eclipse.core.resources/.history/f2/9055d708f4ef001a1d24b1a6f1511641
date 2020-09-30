@@ -1,0 +1,93 @@
+package org.btm.jdbcApp;
+
+import java.sql.*;
+import java.util.Scanner;
+public class JdbcTransaction 
+{
+	public static void main(String[] args) 
+	{
+		Connection con=null;
+		PreparedStatement pst=null;
+		PreparedStatement pst1=null;
+		Savepoint sp=null;
+		String qry="insert into trans.student1 values(?,?,?)";
+		String qry1="insert into trans.student2 values(?,?,?)";
+		Scanner sc=new Scanner(System.in);
+		System.out.println("enter id");
+		int id=sc.nextInt();
+		System.out.println("enter name");
+		String name=sc.next();
+		System.out.println("enter percentage");
+		double per=sc.nextDouble();
+		System.out.println("enter place");
+		String place=sc.next();
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306?user=root&password=root");
+			con.setAutoCommit(false);
+			pst=con.prepareStatement(qry);
+			pst.setInt(1, id);
+			pst.setString(2, name);
+			pst.setDouble(3, per);
+			pst.executeUpdate();
+			System.out.println("1st query executed");
+			con.setSavepoint();
+			pst1=con.prepareStatement(qry1);
+			pst1.setInt(1, id);
+			pst1.setString(2, name);
+			pst1.setString(3, place);
+			pst1.executeUpdate();
+			con.commit();
+			System.out.println("2nd query executed");
+		} catch (ClassNotFoundException | SQLException e) 
+		{
+			try 
+			{
+				con.rollback(sp);
+				con.commit();
+			} catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		finally 
+		{
+			if(pst1!=null)
+			{
+				try 
+				{
+					pst1.close();
+				} catch (SQLException e) 
+				{
+					e.printStackTrace();
+				}
+				
+			}
+			if(pst!=null)
+			{
+				try 
+				{
+					pst.close();
+				} catch (SQLException e) 
+				{
+					e.printStackTrace();
+				}
+				
+			}
+			if(con!=null)
+			{
+				try 
+				{
+					con.close();
+				} catch (SQLException e) 
+				{
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	}
+
+}

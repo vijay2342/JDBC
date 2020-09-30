@@ -1,0 +1,10 @@
+package org.btm.jdbcApp;
+
+public class InsertMultiple {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,64 @@
+package org.btm.jdbcApp;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class InsertMultiple 
+{
+
+	public static void main(String[] args) 
+	{
+		Connection cn=null;
+		PreparedStatement pst=null;
+		String qry="insert into details.student values(?,?,?)";
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("class loaded");
+			cn=DriverManager.getConnection("jdbc:mysql://localhost:3306?user=root&password=root");
+			System.out.println("connected successfully");
+			cn.prepareStatement(qry);
+			System.out.println("plaftform created");
+			//BEFORE EXECUTING WE HAVE TO SET THE VALUES FOR PLACEHOLDER
+			pst.setInt(1,220);
+			pst.setString(2, "vijay");
+			pst.setDouble(3,65.05);
+			// AFTER SET VALUES WE HAVE TO EXECUTE
+			pst.executeUpdate();
+			System.out.println("query executed");
+			
+		} catch (ClassNotFoundException | SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			if(cn!=null)
+			{
+				try 
+				{
+					cn.close();
+				} catch (SQLException e) 
+				{
+					e.printStackTrace();
+				}
+				if(pst!=null)
+				{
+					try 
+					{
+						pst.close();
+					} catch (SQLException e) 
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		}
+		System.out.println("close all costly resources");
+		
+	}
+
+}

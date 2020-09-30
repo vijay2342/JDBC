@@ -1,0 +1,10 @@
+package org.pin.AtmApp;
+
+public class ConsumerCode {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
